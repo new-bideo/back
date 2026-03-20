@@ -7,7 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberLoginRequestDTO {
+public class PasswordResetRequestDTO {
     private String email;
-    private String password;
+    private String verificationCode;
+    private String newPassword;
+    private String confirmPassword;
 }
