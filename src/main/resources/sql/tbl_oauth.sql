@@ -12,8 +12,7 @@ create table tbl_oauth
     created_datetime    timestamp    not null default now(),
     updated_datetime    timestamp    not null default now(),
     deleted_datetime    timestamp    null,
-
-    constraint fk_oauth_member foreign key (member_id) references tbl_member(id),
+    constraint fk_oauth_member foreign key (member_id) references tbl_member(id)
 );
 
 drop table if exists tbl_oauth cascade;
