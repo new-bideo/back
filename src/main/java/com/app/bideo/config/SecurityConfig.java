@@ -32,7 +32,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/works/**").permitAll()
                         .requestMatchers(
                                 "/",
                                 "/main",
@@ -46,7 +48,8 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/image/**",
-                                "/static/**"
+                                "/static/**",
+                                "/uploads/**"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
