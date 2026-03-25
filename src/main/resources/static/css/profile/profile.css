@@ -852,6 +852,11 @@ body[data-owner="true"] .profile-avatar {
   min-height: 640px;
   background: #f3f5f7;
   overflow: hidden;
+  cursor: default;
+  touch-action: none;
+  overscroll-behavior: contain;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .gallery-closeup__image,
@@ -863,6 +868,8 @@ body[data-owner="true"] .profile-avatar {
 .gallery-closeup__image {
   object-fit: cover;
   display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
 .gallery-closeup__fallback {

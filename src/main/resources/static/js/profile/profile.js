@@ -1694,6 +1694,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const galleryCloseupCommentInput = document.getElementById('galleryCloseupCommentInput');
   const galleryCloseupCommentSubmit = document.getElementById('galleryCloseupCommentSubmit');
   const galleryCloseupLikeButton = document.getElementById('galleryCloseupLikeButton');
+  const galleryCloseupMediaWrap = document.querySelector('.gallery-closeup__media-wrap');
   const workShareSearchInput = document.getElementById('workShareSearchInput');
   const workShareRecipientList = document.getElementById('workShareRecipientList');
   const workShareSelectedList = document.getElementById('workShareSelectedList');
@@ -1824,6 +1825,26 @@ document.addEventListener('DOMContentLoaded', () => {
       submitGalleryComment();
     }
   });
+
+  galleryCloseupMediaWrap?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  galleryCloseupMediaWrap?.addEventListener('dblclick', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  galleryCloseupMediaWrap?.addEventListener('gesturestart', (event) => {
+    event.preventDefault();
+  });
+
+  galleryCloseupMediaWrap?.addEventListener('touchstart', (event) => {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  }, { passive: false });
 
   document.getElementById('workDetailLikeButton')?.addEventListener('click', async (event) => {
     if (!currentWorkDetail?.id) return;
