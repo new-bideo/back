@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,18 +36,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/main",
                                 "/error",
                                 "/error-page",
-                                "/main/**",
+                                "/api/search/**",
                                 "/api/auth/**",
-                                "/api/works/**",
                                 "/oauth2/**",
                                 "/login/oauth2/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/image/**",
-                                "/uploads/**",
                                 "/static/**"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
