@@ -1,13 +1,17 @@
 package com.app.bideo.service.gallery;
 
 import com.app.bideo.auth.member.CustomUserDetails;
+import com.app.bideo.domain.gallery.GalleryTagVO;
 import com.app.bideo.domain.interaction.CommentVO;
+import com.app.bideo.dto.common.LikeToggleResponseDTO;
 import com.app.bideo.dto.gallery.GalleryCreateRequestDTO;
+import com.app.bideo.dto.gallery.GalleryDetailResponseDTO;
 import com.app.bideo.dto.gallery.GalleryListResponseDTO;
 import com.app.bideo.dto.gallery.GalleryUpdateRequestDTO;
 import com.app.bideo.dto.interaction.CommentResponseDTO;
 import com.app.bideo.repository.gallery.GalleryDAO;
 import com.app.bideo.repository.work.WorkDAO;
+import com.app.bideo.service.interaction.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,8 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +34,7 @@ public class GalleryService {
 
     private final GalleryDAO galleryDAO;
     private final WorkDAO workDAO;
+    private final CommentService commentService;
 
     // 예술관 등록
     public void write(Long memberId, GalleryCreateRequestDTO requestDTO, MultipartFile coverFile) {
@@ -34,12 +43,28 @@ public class GalleryService {
         requestDTO.setAllowComment(requestDTO.getAllowComment() != null ? requestDTO.getAllowComment() : true);
         requestDTO.setShowSimilar(requestDTO.getShowSimilar() != null ? requestDTO.getShowSimilar() : true);
         galleryDAO.save(requestDTO);
+        saveTags(requestDTO.getId(), requestDTO.getTagIds(), requestDTO.getTagNames());
     }
 
     // 프로필 하이라이트용 예술관 목록 조회
     @Transactional(readOnly = true)
     public List<GalleryListResponseDTO> getProfileGalleries() {
-        return galleryDAO.findAllByMemberId(resolveMemberId(null));
+        List<GalleryListResponseDTO> galleries = galleryDAO.findAllByMemberId(resolveMemberId(null));
+        Long memberId = resolveAuthenticatedMemberId();
+        galleries.forEach(gallery -> gallery.setIsLiked(memberId != null && galleryDAO.existsLike(memberId, gallery.getId())));
+        return galleries;
+    }
+
+    // 예술관 상세 조회
+    @Transactional(readOnly = true)
+    public GalleryDetailResponseDTO getGalleryDetail(Long id) {
+        GalleryDetailResponseDTO detail = galleryDAO.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("gallery not found"));
+        detail.setTags(galleryDAO.findTagsByGalleryId(id));
+
+        Long memberId = resolveAuthenticatedMemberId();
+        detail.setIsLiked(memberId != null && galleryDAO.existsLike(memberId, id));
+        return detail;
     }
 
     // 추천 예술관 (인기순)
@@ -63,11 +88,23 @@ public class GalleryService {
         }
 
         galleryDAO.update(id, requestDTO);
+        galleryDAO.deleteTagsByGalleryId(id);
+        saveTags(id, requestDTO.getTagIds(), requestDTO.getTagNames());
     }
 
     public void delete(Long id, Long memberId) {
         Long resolvedMemberId = resolveMemberId(memberId);
         validateGalleryOwner(id, resolvedMemberId);
+        List<Long> workIds = galleryDAO.findWorkIdsByGalleryId(id);
+
+        workIds.forEach(workId -> {
+            workDAO.deleteFilesByWorkId(workId);
+            workDAO.deleteTagsByWorkId(workId);
+            galleryDAO.deleteWorkLinkByWorkId(workId);
+            workDAO.delete(workId);
+        });
+
+        galleryDAO.deleteWorkLinksByGalleryId(id);
         galleryDAO.delete(id);
     }
 
@@ -75,7 +112,12 @@ public class GalleryService {
     public List<CommentResponseDTO> getComments(Long id) {
         galleryDAO.findMemberIdById(id)
                 .orElseThrow(() -> new IllegalArgumentException("gallery not found"));
-        return galleryDAO.findCommentsByGalleryId(id);
+        List<CommentResponseDTO> comments = galleryDAO.findCommentsByGalleryId(id);
+        Long memberId = resolveAuthenticatedMemberId();
+        comments.forEach(comment ->
+                comment.setIsLiked(memberId != null && commentService.isLikedByCurrentMember(comment.getId()))
+        );
+        return comments;
     }
 
     public List<CommentResponseDTO> writeComment(Long galleryId, Long memberId, String content) {
@@ -99,7 +141,29 @@ public class GalleryService {
                         .build()
         );
         galleryDAO.increaseCommentCount(galleryId);
-        return galleryDAO.findCommentsByGalleryId(galleryId);
+        return getComments(galleryId);
+    }
+
+    public LikeToggleResponseDTO toggleLike(Long galleryId, Long memberId) {
+        Long resolvedMemberId = resolveMemberId(memberId);
+        galleryDAO.findMemberIdById(galleryId)
+                .orElseThrow(() -> new IllegalArgumentException("gallery not found"));
+
+        boolean liked = galleryDAO.existsLike(resolvedMemberId, galleryId);
+        if (liked) {
+            galleryDAO.deleteLike(resolvedMemberId, galleryId);
+            galleryDAO.decreaseLikeCount(galleryId);
+        } else {
+            galleryDAO.saveLike(resolvedMemberId, galleryId);
+            galleryDAO.increaseLikeCount(galleryId);
+        }
+
+        return LikeToggleResponseDTO.builder()
+                .targetId(galleryId)
+                .targetType("GALLERY")
+                .likeCount(galleryDAO.findLikeCount(galleryId))
+                .liked(!liked)
+                .build();
     }
 
     private void validateGalleryOwner(Long galleryId, Long memberId) {
@@ -115,12 +179,20 @@ public class GalleryService {
             return memberId;
         }
 
+        Long authenticatedMemberId = resolveAuthenticatedMemberId();
+        if (authenticatedMemberId != null) {
+            return authenticatedMemberId;
+        }
+
+        throw new IllegalStateException("login required");
+    }
+
+    private Long resolveAuthenticatedMemberId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             return userDetails.getId();
         }
-
-        throw new IllegalStateException("login required");
+        return null;
     }
 
     private String saveCoverImage(MultipartFile coverFile) {
@@ -139,5 +211,50 @@ public class GalleryService {
         } catch (IOException e) {
             throw new RuntimeException("gallery image upload failed", e);
         }
+    }
+
+    private void saveTags(Long galleryId, List<Long> tagIds, List<String> tagNames) {
+        List<Long> resolvedTagIds = new ArrayList<>();
+        if (tagIds != null) {
+            resolvedTagIds.addAll(tagIds);
+        }
+        resolvedTagIds.addAll(resolveTagIds(tagNames));
+
+        new LinkedHashSet<>(resolvedTagIds).forEach(tagId ->
+                galleryDAO.saveTag(galleryId, tagId)
+        );
+    }
+
+    private List<Long> resolveTagIds(List<String> tagNames) {
+        List<String> safeTagNames = tagNames == null ? Collections.emptyList() : tagNames;
+
+        return safeTagNames.stream()
+                .map(this::normalizeTagName)
+                .filter(Objects::nonNull)
+                .distinct()
+                .map(this::findOrCreateTagId)
+                .toList();
+    }
+
+    private String normalizeTagName(String tagName) {
+        if (tagName == null) {
+            return null;
+        }
+
+        String normalized = tagName.trim();
+        if (normalized.startsWith("#")) {
+            normalized = normalized.substring(1).trim();
+        }
+
+        return normalized.isBlank() ? null : normalized;
+    }
+
+    private Long findOrCreateTagId(String tagName) {
+        return galleryDAO.findTagIdByName(tagName)
+                .orElseGet(() -> {
+                    galleryDAO.saveTagName(tagName);
+                    return galleryDAO.findTagIdByName(tagName)
+                            .orElseThrow(() -> new IllegalStateException("tag save failed"));
+                });
     }
 }
