@@ -4,7 +4,6 @@ import com.app.bideo.domain.auction.AuctionVO;
 import com.app.bideo.domain.auction.BidVO;
 import com.app.bideo.dto.auction.BidRequestDTO;
 import com.app.bideo.dto.auction.BidResponseDTO;
-import com.app.bideo.dto.auction.MyBidHistoryResponseDTO;
 import com.app.bideo.repository.auction.AuctionDAO;
 import com.app.bideo.repository.auction.BidDAO;
 import com.app.bideo.service.notification.NotificationService;
@@ -12,19 +11,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
-public class BidService {
+public class BidCommandService {
 
     private final BidDAO bidDAO;
     private final AuctionDAO auctionDAO;
     private final NotificationService notificationService;
-
-    private static final int PAGE_SIZE = 20;
 
     public BidResponseDTO placeBid(Long memberId, BidRequestDTO requestDTO) {
         AuctionVO auction = auctionDAO.findRawById(requestDTO.getAuctionId());
@@ -50,19 +46,19 @@ public class BidService {
         BidResponseDTO previousHighest = bidDAO.findHighestBid(requestDTO.getAuctionId()).orElse(null);
 
         bidDAO.clearPreviousWinning(requestDTO.getAuctionId());
-
-        BidVO bidVO = BidVO.builder()
+        bidDAO.save(BidVO.builder()
                 .auctionId(requestDTO.getAuctionId())
                 .memberId(memberId)
                 .bidPrice(requestDTO.getBidPrice())
                 .isWinning(true)
-                .build();
-        bidDAO.save(bidVO);
+                .build());
+
+        int uniqueBidderCount = bidDAO.findBidderIds(requestDTO.getAuctionId()).size();
 
         auctionDAO.updateCurrentPrice(
                 requestDTO.getAuctionId(),
                 requestDTO.getBidPrice(),
-                auction.getBidCount() + 1
+                uniqueBidderCount
         );
 
         notificationService.createNotification(
@@ -80,15 +76,5 @@ public class BidService {
         }
 
         return bidDAO.findHighestBid(requestDTO.getAuctionId()).orElse(null);
-    }
-
-    @Transactional(readOnly = true)
-    public List<BidResponseDTO> getBidsByAuction(Long auctionId, int page) {
-        return bidDAO.findByAuctionId(auctionId, page * PAGE_SIZE, PAGE_SIZE);
-    }
-
-    @Transactional(readOnly = true)
-    public List<MyBidHistoryResponseDTO> getClosedBidHistories(Long memberId) {
-        return bidDAO.findClosedBidHistoriesByMemberId(memberId);
     }
 }

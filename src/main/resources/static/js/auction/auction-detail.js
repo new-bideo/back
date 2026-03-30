@@ -3,6 +3,14 @@ const auctionMainMedia = document.getElementById("auctionMainMedia");
 const auctionThumbStrip = document.getElementById("auctionThumbStrip");
 const deleteWorkButton = document.getElementById("deleteWorkBtn");
 const bidActionButton = document.getElementById("bidActionBtn");
+const shareButton = document.getElementById("shareBtn");
+const auctionShareModal = document.getElementById("workShareModal");
+const auctionShareCloseButton = document.getElementById("auctionShareCloseButton");
+const workShareSearchInput = document.getElementById("workShareSearchInput");
+const workShareSelectedList = document.getElementById("workShareSelectedList");
+const workShareRecipientList = document.getElementById("workShareRecipientList");
+const workShareMessageInput = document.getElementById("workShareMessageInput");
+const workShareSendButton = document.getElementById("workShareSendButton");
 
 let auctionDetailState = {
     auction: null,
@@ -10,7 +18,9 @@ let auctionDetailState = {
     selectedFileIndex: 0,
     currentMemberId: null,
     countdownTimerId: null,
-    isBidSubmitting: false
+    isBidSubmitting: false,
+    shareRecipients: [],
+    selectedShareRecipients: []
 };
 
 function formatPrice(value) {
@@ -42,6 +52,151 @@ function getCreatorInitial(name) {
     return (name || "B").trim().charAt(0).toUpperCase();
 }
 
+function isImageFile(file) {
+    const fileType = String(file?.fileType || "").toLowerCase();
+    const fileUrl = String(file?.fileUrl || "").toLowerCase();
+    return fileType.startsWith("image/") || /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(fileUrl);
+}
+
+function getShareUrl() {
+    if (auctionDetailState.work?.id) {
+        return `${window.location.origin}/auction/auction-detail/${auctionDetailState.work.id}`;
+    }
+
+    return window.location.href;
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function mergeShareRecipients(...groups) {
+    const unique = new Map();
+
+    groups.flat().forEach((user, index) => {
+        const id = String(user?.memberId ?? user?.id ?? `user_${index}`);
+        if (unique.has(id)) return;
+
+        const nickname = user?.nickname || `user_${index}`;
+        unique.set(id, {
+            id,
+            username: nickname,
+            realname: nickname,
+            avatarText: (nickname || "U").trim().charAt(0).toUpperCase()
+        });
+    });
+
+    return Array.from(unique.values());
+}
+
+async function loadShareRecipients() {
+    if (!auctionDetailState.currentMemberId) {
+        auctionDetailState.shareRecipients = [];
+        return;
+    }
+
+    const [followersResponse, followingsResponse] = await Promise.all([
+        fetch(`/api/members/${auctionDetailState.currentMemberId}/followers`),
+        fetch(`/api/members/${auctionDetailState.currentMemberId}/followings`)
+    ]);
+
+    if (!followersResponse.ok || !followingsResponse.ok) {
+        throw new Error("공유 대상을 불러오지 못했습니다.");
+    }
+
+    const [followers, followings] = await Promise.all([
+        followersResponse.json(),
+        followingsResponse.json()
+    ]);
+
+    auctionDetailState.shareRecipients = mergeShareRecipients(followers, followings);
+}
+
+function renderShareSelectedRecipients() {
+    if (!workShareSelectedList) return;
+
+    if (!auctionDetailState.selectedShareRecipients.length) {
+        workShareSelectedList.innerHTML = "";
+        return;
+    }
+
+    workShareSelectedList.innerHTML = auctionDetailState.selectedShareRecipients.map((recipient) => `
+        <div class="work-share-chip">
+          <span class="work-share-chip__text">${escapeHtml(recipient.username)}</span>
+          <button class="work-share-chip__remove" type="button" data-share-remove="${escapeHtml(recipient.id)}" aria-label="${escapeHtml(recipient.username)} 삭제">
+            <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+              <polyline fill="none" points="20.643 3.357 12 12 3.353 20.647" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></polyline>
+              <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" x1="20.649" x2="3.354" y1="20.649" y2="3.354"></line>
+            </svg>
+          </button>
+        </div>
+    `).join("");
+}
+
+function renderShareRecipientList(filter = "") {
+    if (!workShareRecipientList) return;
+
+    const normalized = filter.trim().toLowerCase();
+    const recipients = auctionDetailState.shareRecipients.filter((recipient) => {
+        if (!normalized) return true;
+        return recipient.username.toLowerCase().includes(normalized) || recipient.realname.toLowerCase().includes(normalized);
+    }).slice(0, 20);
+
+    if (!recipients.length) {
+        workShareRecipientList.innerHTML = `
+            <div class="work-share-empty">
+              <div class="work-share-empty__title">검색 결과가 없습니다.</div>
+              <div class="work-share-empty__copy">다른 사용자 이름으로 다시 검색해보세요.</div>
+            </div>
+        `;
+        return;
+    }
+
+    workShareRecipientList.innerHTML = recipients.map((recipient) => {
+        const isSelected = auctionDetailState.selectedShareRecipients.some((selected) => selected.id === recipient.id);
+        return `
+            <button class="work-share-recipient${isSelected ? " is-selected" : ""}" type="button" data-share-recipient="${escapeHtml(recipient.id)}">
+              <div class="work-share-recipient__main">
+                <div class="work-share-recipient__avatar">${escapeHtml(recipient.avatarText)}</div>
+                <div class="work-share-recipient__copy">
+                  <div class="work-share-recipient__username">${escapeHtml(recipient.username)}</div>
+                  <div class="work-share-recipient__realname">${escapeHtml(recipient.realname)}</div>
+                </div>
+              </div>
+              <div class="work-share-recipient__check${isSelected ? " is-selected" : ""}">
+                ${isSelected ? '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><polyline fill="none" points="21.648 5.352 9.002 17.998 2.358 11.358" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></polyline></svg>' : ""}
+              </div>
+            </button>
+        `;
+    }).join("");
+}
+
+function toggleShareRecipient(recipientId) {
+    const target = auctionDetailState.shareRecipients.find((recipient) => recipient.id === recipientId);
+    if (!target) return;
+
+    const existingIndex = auctionDetailState.selectedShareRecipients.findIndex((recipient) => recipient.id === recipientId);
+    if (existingIndex >= 0) {
+        auctionDetailState.selectedShareRecipients.splice(existingIndex, 1);
+    } else {
+        auctionDetailState.selectedShareRecipients.push(target);
+    }
+
+    renderShareSelectedRecipients();
+    renderShareRecipientList(workShareSearchInput?.value || "");
+}
+
+function removeShareRecipient(recipientId) {
+    auctionDetailState.selectedShareRecipients = auctionDetailState.selectedShareRecipients.filter((recipient) => recipient.id !== recipientId);
+    renderShareSelectedRecipients();
+    renderShareRecipientList(workShareSearchInput?.value || "");
+}
+
 function renderMainMedia(file) {
     if (!auctionMainMedia) return;
 
@@ -50,7 +205,7 @@ function renderMainMedia(file) {
         return;
     }
 
-    const isImage = (file.fileType || "").startsWith("image/");
+    const isImage = isImageFile(file);
     auctionMainMedia.innerHTML = isImage
         ? `<img id="mainPlayer" src="${file.fileUrl}" alt="경매 작품">`
         : `
@@ -78,7 +233,7 @@ function renderThumbnails(files) {
     }
 
     auctionThumbStrip.innerHTML = files.map((file, index) => {
-        const isImage = (file.fileType || "").startsWith("image/");
+        const isImage = isImageFile(file);
         return `
             <div class="thumb-card${index === auctionDetailState.selectedFileIndex ? " active" : ""}" data-index="${index}">
                 ${isImage
@@ -119,11 +274,9 @@ function renderWorkDetail(work) {
 function syncDeleteButtonVisibility() {
     if (!deleteWorkButton) return;
 
-    const isOwner = Boolean(
-        auctionDetailState.currentMemberId &&
-        auctionDetailState.work?.memberId &&
-        auctionDetailState.currentMemberId === auctionDetailState.work.memberId
-    );
+    const currentMemberId = Number(auctionDetailState.currentMemberId || 0);
+    const ownerMemberId = Number(auctionDetailState.work?.memberId || 0);
+    const isOwner = currentMemberId > 0 && ownerMemberId > 0 && currentMemberId === ownerMemberId;
 
     deleteWorkButton.hidden = !isOwner;
 }
@@ -276,6 +429,41 @@ function changeBid(direction) {
     document.getElementById("bidDisplay").textContent = formatPrice(window.bidVal);
 }
 
+function openShareModal() {
+    if (!auctionShareModal) return;
+
+    auctionDetailState.selectedShareRecipients = [];
+    renderShareSelectedRecipients();
+    renderShareRecipientList("");
+
+    if (workShareSearchInput) workShareSearchInput.value = "";
+    if (workShareMessageInput) workShareMessageInput.value = "";
+
+    auctionShareModal.hidden = false;
+    window.setTimeout(() => workShareSearchInput?.focus(), 0);
+}
+
+function closeShareModal() {
+    if (!auctionShareModal) return;
+    auctionShareModal.hidden = true;
+}
+
+function submitWorkShare() {
+    if (!auctionDetailState.selectedShareRecipients.length) {
+        alert("공유할 대상을 1명 이상 선택해주세요.");
+        return;
+    }
+
+    const recipientsLabel = auctionDetailState.selectedShareRecipients.map((recipient) => recipient.username).join(", ");
+    const message = workShareMessageInput?.value.trim() || "";
+    const workTitle = auctionDetailState.work?.title || "게시물";
+    const suffix = message ? `\n메시지: ${message}` : "";
+    const shareUrl = getShareUrl();
+
+    alert(`${workTitle}을(를) ${recipientsLabel}에게 공유했습니다.${suffix}\n링크: ${shareUrl}`);
+    closeShareModal();
+}
+
 async function doBid() {
     if (!auctionDetailState.auction?.id) {
         alert("경매 정보를 찾을 수 없습니다.");
@@ -374,10 +562,61 @@ async function deleteAuctionWork() {
             throw new Error(errorText || "작품 삭제에 실패했습니다.");
         }
 
-        window.location.href = "/profile/profile";
+        window.location.href = "/profile";
     } catch (error) {
         alert(error.message || "작품 삭제에 실패했습니다.");
     }
 }
 
 initializeAuctionDetail();
+
+shareButton?.addEventListener("click", async () => {
+    try {
+        if (!auctionDetailState.shareRecipients.length) {
+            await loadShareRecipients();
+        }
+        openShareModal();
+    } catch (error) {
+        alert(error.message || "공유 대상을 불러오지 못했습니다.");
+    }
+});
+auctionShareCloseButton?.addEventListener("click", closeShareModal);
+workShareSearchInput?.addEventListener("input", (event) => {
+    renderShareRecipientList(event.target.value || "");
+});
+
+workShareSearchInput?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        const firstRecipient = workShareRecipientList?.querySelector("[data-share-recipient]");
+        if (firstRecipient) {
+            toggleShareRecipient(firstRecipient.dataset.shareRecipient);
+        }
+    }
+});
+
+workShareRecipientList?.addEventListener("click", (event) => {
+    const recipientButton = event.target.closest("[data-share-recipient]");
+    if (!recipientButton) return;
+    toggleShareRecipient(recipientButton.dataset.shareRecipient);
+});
+
+workShareSelectedList?.addEventListener("click", (event) => {
+    const removeButton = event.target.closest("[data-share-remove]");
+    if (!removeButton) return;
+    removeShareRecipient(removeButton.dataset.shareRemove);
+});
+
+workShareSendButton?.addEventListener("click", submitWorkShare);
+
+auctionShareModal?.addEventListener("click", (event) => {
+    if (event.target === auctionShareModal) {
+        closeShareModal();
+    }
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && auctionShareModal && !auctionShareModal.hidden) {
+        closeShareModal();
+    }
+});
