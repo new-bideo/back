@@ -4,6 +4,7 @@ import com.app.bideo.domain.interaction.BookmarkVO;
 import com.app.bideo.repository.auction.AuctionDAO;
 import com.app.bideo.repository.gallery.GalleryDAO;
 import com.app.bideo.repository.interaction.BookmarkDAO;
+import com.app.bideo.service.common.S3FileService;
 import com.app.bideo.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class BookmarkService {
     private final BookmarkDAO bookmarkDAO;
     private final AuctionDAO auctionDAO;
     private final GalleryDAO galleryDAO;
+    private final S3FileService s3FileService;
     private final NotificationService notificationService;
 
     public Map<String, Object> toggleBookmark(Long memberId, String targetType, Long targetId) {
@@ -55,6 +57,12 @@ public class BookmarkService {
         List<Map<String, Object>> result = new ArrayList<>();
         result.addAll(bookmarkDAO.findMyBookmarks(memberId));
         result.addAll(auctionDAO.findMyWishlist(memberId));
+        result.forEach(item -> {
+            Object thumb = item.get("thumbnail");
+            if (thumb instanceof String && !((String) thumb).isBlank()) {
+                item.put("thumbnail", s3FileService.getPresignedUrl((String) thumb));
+            }
+        });
         result.sort((a, b) -> {
             var dtA = a.get("createdDatetime");
             var dtB = b.get("createdDatetime");

@@ -2232,11 +2232,22 @@ document.addEventListener('DOMContentLoaded', () => {
     requestWorkAuction();
   });
 
-  document.getElementById('workDetailSavedButton')?.addEventListener('click', () => {
+  document.getElementById('workDetailSavedButton')?.addEventListener('click', async () => {
     const savedButton = document.getElementById('workDetailSavedButton');
-    if (!savedButton) return;
+    if (!savedButton || !currentWorkDetail?.id) return;
 
-    isWorkSaved = !isWorkSaved;
+    try {
+      const response = await fetch('/api/bookmarks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ targetType: 'WORK', targetId: currentWorkDetail.id })
+      });
+      const result = await response.json();
+      isWorkSaved = Boolean(result.bookmarked);
+    } catch {
+      isWorkSaved = !isWorkSaved;
+    }
     savedButton.classList.toggle('is-saved', isWorkSaved);
   });
 

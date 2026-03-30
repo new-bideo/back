@@ -37,7 +37,7 @@
                 WHEN b.target_type = 'CONTEST' THEN c.title
             END AS "title",
             CASE
-                WHEN b.target_type = 'WORK' THEN (SELECT wf.file_url FROM tbl_work_file wf WHERE wf.work_id = b.target_id AND wf.sort_order = 0 LIMIT 1)
+                WHEN b.target_type = 'WORK' THEN (SELECT wf.file_url FROM tbl_work_file wf WHERE wf.work_id = b.target_id ORDER BY wf.sort_order ASC, wf.id ASC LIMIT 1)
                 WHEN b.target_type = 'GALLERY' THEN g.cover_image
                 WHEN b.target_type = 'CONTEST' THEN c.cover_image
             END AS "thumbnail"
