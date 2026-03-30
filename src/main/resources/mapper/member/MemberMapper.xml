@@ -30,6 +30,16 @@
           and status = 'ACTIVE'
     </select>
 
+    <select id="selectByNickname" parameterType="string" resultType="com.app.bideo.domain.member.MemberVO"> <!-- 이승민| 프로필 닉네임 경로 조회로 인한 추가 -->
+        select
+            id, email, password, nickname, real_name, birth_date, bio, profile_image,
+            role, creator_verified, seller_verified, creator_tier, follower_count, following_count,
+            gallery_count, phone_number, last_login_datetime, status, created_datetime, updated_datetime, deleted_datetime
+        from tbl_member
+        where nickname = #{nickname}
+          and status = 'ACTIVE'
+    </select>
+
     <select id="selectByPhoneNumber" parameterType="string" resultType="com.app.bideo.domain.member.MemberVO">
         select
             id, email, password, nickname, real_name, birth_date, bio, profile_image,
