@@ -201,10 +201,6 @@ window.addEventListener('load', () => {
       default: 'M4.6 22.73A107 107 0 0 0 11 23h2.22c2.43-.04 4.6-.16 6.18-.27A3.9 3.9 0 0 0 23 18.8v-8.46a4 4 0 0 0-1.34-3L14.4.93a3.63 3.63 0 0 0-4.82 0L2.34 7.36A4 4 0 0 0 1 10.35v8.46a3.9 3.9 0 0 0 3.6 3.92M13.08 2.4l7.25 6.44a2 2 0 0 1 .67 1.5v8.46a1.9 1.9 0 0 1-1.74 1.92q-1.39.11-3.26.19V16a4 4 0 0 0-8 0v4.92q-1.87-.08-3.26-.19A1.9 1.9 0 0 1 3 18.81v-8.46a2 2 0 0 1 .67-1.5l7.25-6.44a1.63 1.63 0 0 1 2.16 0M13.12 21h-2.24a1 1 0 0 1-.88-1v-4a2 2 0 1 1 4 0v4a1 1 0 0 1-.88 1',
       active: 'M9.59.92a3.63 3.63 0 0 1 4.82 0l7.25 6.44A4 4 0 0 1 23 10.35v8.46a3.9 3.9 0 0 1-3.6 3.92 106 106 0 0 1-14.8 0A3.9 3.9 0 0 1 1 18.8v-8.46a4 4 0 0 1 1.34-3zM12 16a5 5 0 0 1-3.05-1.04l-1.23 1.58a7 7 0 0 0 8.56 0l-1.23-1.58A5 5 0 0 1 12 16'
     },
-    '공모전': {
-      default: 'M23 5a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4zm-10 6V3h6a2 2 0 0 1 2 2v6zm8 8a2 2 0 0 1-2 2h-6v-8h8zM5 3h6v18H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2',
-      active: 'M11 23H5a4 4 0 0 1-4-4V5a4 4 0 0 1 4-4h6zm12-4a4 4 0 0 1-4 4h-6V13h10zM19 1a4 4 0 0 1 4 4v6H13V1z'
-    },
     '만들기': {
       default: 'M11 11H6v2h5v5h2v-5h5v-2h-5V6h-2zM5 1a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4zm16 4v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2',
       active: 'M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm10 6H6v2h5v5h2v-5h5v-2h-5V6h-2z'
@@ -218,8 +214,12 @@ window.addEventListener('load', () => {
       active: 'M17 22.35A11.5 11.5 0 1 1 22.36 17l.64 3.7a2 2 0 0 1-2.3 2.3zM7 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m5 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m5-3a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3'
     },
     '대시보드': {
-      default: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10m3 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m1.13-10.29A2 2 0 0 0 14.7.31a12 12 0 0 0-5.4 0c-.73.17-1.26.74-1.43 1.4l-.58 2.14-2.14-.57a2 2 0 0 0-1.93.54 12 12 0 0 0-2.7 4.67c-.22.72.01 1.46.5 1.95L2.59 12l-1.57 1.56a2 2 0 0 0-.5 1.95 12 12 0 0 0 2.7 4.68c.51.54 1.27.72 1.93.54l2.14-.58.58 2.14c.17.67.7 1.24 1.43 1.4a12 12 0 0 0 5.4 0 2 2 0 0 0 1.43-1.4l.58-2.14 2.13.58c.67.18 1.43 0 1.94-.55a12 12 0 0 0 2.7-4.67 2 2 0 0 0-.5-1.94L21.4 12l1.57-1.56c.49-.5.71-1.23.5-1.95a12 12 0 0 0-2.7-4.67 2 2 0 0 0-1.93-.54l-2.14.57zm-6.34.54a10 10 0 0 1 4.42 0l.56 2.12a2 2 0 0 0 2.45 1.41l2.13-.57a10 10 0 0 1 2.2 3.83L20 10.59a2 2 0 0 0 0 2.83l1.55 1.55a10 10 0 0 1-2.2 3.82l-2.13-.57a2 2 0 0 0-2.44 1.42l-.57 2.12a10 10 0 0 1-4.42 0l-.57-2.12a2 2 0 0 0-2.45-1.42l-2.12.57a10 10 0 0 1-2.2-3.82L4 13.42a2 2 0 0 0 0-2.83L2.45 9.03a10 10 0 0 1 2.2-3.82l2.13.57a2 2 0 0 0 2.44-1.41z',
-      active: 'M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0M14.7.3c.73.18 1.25.74 1.43 1.41l.58 2.14 2.14-.57a2 2 0 0 1 1.93.54 12 12 0 0 1 2.7 4.67c.21.72-.01 1.46-.5 1.95L21.4 12l1.57 1.57c.49.49.72 1.23.5 1.94a12 12 0 0 1-2.7 4.67c-.51.55-1.27.73-1.94.55l-2.13-.58-.58 2.14a1.9 1.9 0 0 1-1.43 1.4 12 12 0 0 1-5.4 0 2 2 0 0 1-1.43-1.4l-.58-2.14-2.14.58c-.66.18-1.42 0-1.93-.54a12 12 0 0 1-2.7-4.68c-.22-.72.01-1.46.5-1.95L2.6 12l-1.57-1.56a2 2 0 0 1-.5-1.95 12 12 0 0 1 2.7-4.67 2 2 0 0 1 1.93-.54l2.14.57.58-2.14c.17-.66.7-1.23 1.43-1.4a12 12 0 0 1 5.4 0M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10'
+      default: 'M4 20h16v2H2V4h2zm4-2H5V9h3zm5 0h-3V3h3zm5 0h-3v-6h3z',
+      active: 'M8 18H5V9h3zm5 0h-3V3h3zm5 0h-3v-6h3zM4 20h16v2H2V4h2z'
+    },
+    '로그아웃': {
+      default: 'M10 17l1.41-1.41L8.83 13H20v-2H8.83l2.58-2.59L10 7l-5 5zm10-14h-8v2h8v14h-8v2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2',
+      active: 'M10 17l1.41-1.41L8.83 13H20v-2H8.83l2.58-2.59L10 7l-5 5zm10-14h-8v2h8v14h-8v2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2'
     }
   };
 
@@ -558,6 +558,7 @@ window.addEventListener('load', () => {
   let msgEditingMessageId = null;
   let msgCurrentPartnerName = '';
   let msgCurrentPartnerAvatar = LOCAL_PROFILE_IMAGE;
+  let msgFocusedMessageTimer = null;
 
   function msgTimeAgo(dateStr) {
     if (!dateStr) return '';
@@ -753,33 +754,48 @@ window.addEventListener('load', () => {
     const rowJustify = isMine ? 'flex-end' : 'flex-start';
     const avatar = msg.senderProfileImage || LOCAL_PROFILE_IMAGE;
     const likeIcon = msg.isLiked ? '♥' : '♡';
-    const actions = [];
 
+    let hoverActions = '';
     if (!msg.deleted) {
-      actions.push('<button type="button" class="button-reset" data-message-action="reply" data-message-id="' + msg.id + '" style="cursor:pointer;color:#767676;font-size:11px;">답장</button>');
-      actions.push('<button type="button" class="button-reset" data-message-action="like" data-message-id="' + msg.id + '" style="cursor:pointer;color:' + (msg.isLiked ? '#e60023' : '#767676') + ';font-size:11px;">' + likeIcon + '</button>');
-      if (msg.canEdit) {
-        actions.push('<button type="button" class="button-reset" data-message-action="edit" data-message-id="' + msg.id + '" style="cursor:pointer;color:#767676;font-size:11px;">수정</button>');
-      }
+      let btns = '';
       if (msg.canDelete) {
-        actions.push('<button type="button" class="button-reset" data-message-action="delete" data-message-id="' + msg.id + '" style="cursor:pointer;color:#767676;font-size:11px;">삭제</button>');
+        btns += '<button type="button" class="button-reset" data-message-action="delete" data-message-id="' + msg.id + '" style="cursor:pointer;color:#767676;font-size:13px;" title="삭제">✕</button>';
       }
+      btns += '<button type="button" class="button-reset" data-message-action="like" data-message-id="' + msg.id + '" style="cursor:pointer;color:' + (msg.isLiked ? '#e60023' : '#767676') + ';font-size:13px;" title="좋아요">' + likeIcon + '</button>';
+      hoverActions = '<div class="msg-hover-actions" style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' + btns + '</div>';
     }
 
-    const sideContent = '<div style="display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:2px;flex-shrink:0;padding-bottom:2px;">'
-      + '<span style="font-size:10px;color:#767676;white-space:nowrap;">' + msgEscapeHtml(msgFormatBubbleTime(msg.createdDatetime)) + (msg.edited ? ' · 수정됨' : '') + '</span>'
-      + (actions.length ? '<div style="display:flex;gap:6px;">' + actions.join('') + '</div>' : '')
+    const timeLabel = '<span style="font-size:10px;color:#767676;white-space:nowrap;flex-shrink:0;">' + msgEscapeHtml(msgFormatBubbleTime(msg.createdDatetime)) + (msg.edited ? ' · 수정됨' : '') + '</span>';
+
+    const galleryMatch = msg.content ? msg.content.match(/^\[gallery\](.*?)\[\/gallery\](.*)$/) : null;
+    let bubbleInner;
+    if (galleryMatch && !msg.deleted) {
+      const galleryUrl = galleryMatch[1];
+      const galleryTitle = galleryMatch[2] || '예술관';
+      bubbleInner = '<a href="' + msgEscapeHtml(galleryUrl) + '" style="display:block;text-decoration:none;color:inherit;">'
+        + '<div style="display:flex;align-items:center;gap:10px;">'
+        + '<div style="width:48px;height:48px;border-radius:8px;background:#e0e0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">🖼</div>'
+        + '<div style="min-width:0;">'
+        + '<div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + msgEscapeHtml(galleryTitle) + '</div>'
+        + '<div style="font-size:11px;color:' + (isMine ? 'rgba(255,255,255,.6)' : '#767676') + ';margin-top:2px;">예술관 보기</div>'
+        + '</div>'
+        + '</div>'
+        + '</a>';
+    } else {
+      bubbleInner = msgRenderReplyPreview(msg) + '<div>' + msgEscapeHtml(msg.content) + '</div>';
+    }
+
+    const bubble = '<div style="background:' + bubbleBg + ';color:' + bubbleColor + ';padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45;word-break:break-word;min-width:0;">'
+      + bubbleInner
       + '</div>';
 
+    const innerParts = isMine
+      ? hoverActions + timeLabel + bubble
+      : '<img src="' + msgEscapeHtml(avatar) + '" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;">' + bubble + timeLabel + hoverActions;
+
     return '<div class="msg-bubble-row" data-message-id="' + msg.id + '" style="display:flex;justify-content:' + rowJustify + ';margin-bottom:14px;">'
-      + '<div style="display:flex;align-items:flex-end;gap:8px;max-width:82%;">'
-      + (isMine ? '' : '<img src="' + msgEscapeHtml(avatar) + '" style="width:24px;height:24px;border-radius:50%;flex-shrink:0;">')
-      + (isMine ? sideContent : '')
-      + '<div style="background:' + bubbleBg + ';color:' + bubbleColor + ';padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45;word-break:break-word;min-width:0;">'
-      + msgRenderReplyPreview(msg)
-      + '<div>' + msgEscapeHtml(msg.content) + '</div>'
-      + '</div>'
-      + (isMine ? '' : sideContent)
+      + '<div style="display:flex;align-items:flex-end;gap:6px;max-width:82%;">'
+      + innerParts
       + '</div>'
       + '</div>';
   }
@@ -797,15 +813,72 @@ window.addEventListener('load', () => {
     }
   }
 
-  function msgReloadCurrentRoom(panel, scrollToBottom) {
+  function msgFocusMessage(sidePanel, messageId) {
+    if (!sidePanel || !messageId) return false;
+    const chatBody = sidePanel.querySelector('.msg-chat-body');
+    const target = sidePanel.querySelector('.msg-bubble-row[data-message-id="' + messageId + '"]');
+    if (!chatBody || !target) return false;
+
+    chatBody.querySelectorAll('.msg-bubble-row--focused').forEach(function(item) {
+      item.classList.remove('msg-bubble-row--focused');
+    });
+    target.classList.add('msg-bubble-row--focused');
+    target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (msgFocusedMessageTimer) clearTimeout(msgFocusedMessageTimer);
+    msgFocusedMessageTimer = setTimeout(function() {
+      target.classList.remove('msg-bubble-row--focused');
+    }, 3000);
+    return true;
+  }
+
+  function msgFetchRoomMessagesUntilFound(roomId, targetMessageId) {
+    let page = 0;
+    let collected = [];
+
+    function loadNextPage() {
+      return fetch('/api/messages/rooms/' + roomId + '/messages?page=' + page)
+        .then(function(res) {
+          return res.ok ? res.json() : [];
+        })
+        .then(function(messages) {
+          if (!messages || !messages.length) {
+            return { messages: collected, found: false };
+          }
+          collected = collected.concat(messages);
+          if (messages.some(function(message) { return Number(message.id) === Number(targetMessageId); })) {
+            return { messages: collected, found: true };
+          }
+          page += 1;
+          return loadNextPage();
+        });
+    }
+
+    return loadNextPage();
+  }
+
+  function msgReloadCurrentRoom(panel, scrollToBottom, options) {
     if (!panel || !msgCurrentRoomId) return;
     const sidePanel = panel.querySelector('.side-panel');
     if (!sidePanel) return;
-    fetch('/api/messages/rooms/' + msgCurrentRoomId + '/messages')
-      .then(function(res) { return res.ok ? res.json() : []; })
-      .then(function(messages) {
-        msgCurrentMessages = messages || [];
-        msgRenderChatMessages(sidePanel, scrollToBottom);
+    const settings = options || {};
+    const loader = settings.focusMessageId
+      ? msgFetchRoomMessagesUntilFound(msgCurrentRoomId, settings.focusMessageId)
+      : fetch('/api/messages/rooms/' + msgCurrentRoomId + '/messages')
+          .then(function(res) { return res.ok ? res.json() : []; })
+          .then(function(messages) {
+            return { messages: messages || [], found: false };
+          });
+
+    loader
+      .then(function(result) {
+        msgCurrentMessages = result.messages || [];
+        msgRenderChatMessages(sidePanel, scrollToBottom && !settings.focusMessageId);
+        if (settings.focusMessageId) {
+          const focused = msgFocusMessage(sidePanel, settings.focusMessageId);
+          if (!focused) {
+            showToast('메시지를 찾을 수 없습니다.');
+          }
+        }
       })
       .catch(function() {
         const chatBody = sidePanel.querySelector('.msg-chat-body');
@@ -821,7 +894,7 @@ window.addEventListener('load', () => {
   }
 
   function buildMessageListHTML() {
-    return '<style>#message-menu *:focus { outline: none; }</style>' +
+    return '<style>#message-menu *:focus { outline: none; } .msg-bubble-row .msg-hover-actions { opacity:0; transition:opacity .15s; } .msg-bubble-row:hover .msg-hover-actions { opacity:1; } .msg-bubble-row--focused > div { box-shadow:0 0 0 2px rgba(230,0,35,.18); border-radius:22px; background:rgba(230,0,35,.06); transition:background .25s ease, box-shadow .25s ease; }</style>' +
         '<div class="side-panel">' +
         '<div class="side-panel__header">' +
         '<h2 class="side-panel__title">메시지</h2>' +
@@ -886,7 +959,7 @@ window.addEventListener('load', () => {
       });
   }
 
-  function openChatDetail(panel, roomId, partnerName, partnerAvatar) {
+  function openChatDetail(panel, roomId, partnerName, partnerAvatar, options) {
     msgCurrentRoomId = roomId;
     msgCurrentPartnerName = partnerName;
     msgCurrentPartnerAvatar = partnerAvatar;
@@ -921,7 +994,7 @@ window.addEventListener('load', () => {
       '</div>';
 
     msgResetComposer(sidePanel);
-    msgReloadCurrentRoom(panel, true);
+    msgReloadCurrentRoom(panel, true, options);
 
     msgReadCurrentRoom(roomId);
 
@@ -1044,6 +1117,47 @@ window.addEventListener('load', () => {
     const btn = document.querySelector('[aria-label="메시지"]');
     if (!btn) return;
 
+    function getOrOpenMessagePanel() {
+      let panel = document.getElementById('message-menu');
+      if (panel) return panel;
+      btn.click();
+      return document.getElementById('message-menu');
+    }
+
+    function openMessageFromNotification(detail) {
+      const roomId = Number(detail && detail.messageRoomId);
+      const messageId = Number(detail && detail.messageId);
+      if (!roomId || !messageId) {
+        showToast('메시지를 찾을 수 없습니다.');
+        return;
+      }
+
+      const panel = getOrOpenMessagePanel();
+      if (!panel) {
+        showToast('메시지 창을 열 수 없습니다.');
+        return;
+      }
+
+      fetch('/api/messages/rooms')
+        .then(function(res) { return res.ok ? res.json() : []; })
+        .then(function(rooms) {
+          const room = (rooms || []).find(function(item) {
+            return Number(item.id) === roomId;
+          });
+          if (!room) {
+            showToast('메시지를 찾을 수 없습니다.');
+            return;
+          }
+          const partner = room.members && room.members[0];
+          const partnerName = partner ? partner.nickname : '알 수 없음';
+          const partnerAvatar = partner && partner.profileImage ? partner.profileImage : LOCAL_PROFILE_IMAGE;
+          openChatDetail(panel, roomId, partnerName, partnerAvatar, { focusMessageId: messageId });
+        })
+        .catch(function() {
+          showToast('메시지를 불러올 수 없습니다.');
+        });
+    }
+
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const existing = document.getElementById('message-menu');
@@ -1101,6 +1215,10 @@ window.addEventListener('load', () => {
           openChatDetail(panel, roomId, partnerName, partnerAvatar);
         });
       }
+    });
+
+    window.addEventListener('bideo:open-message-notification', function(event) {
+      openMessageFromNotification(event.detail || {});
     });
   }
 
@@ -1216,6 +1334,15 @@ window.addEventListener('load', () => {
     });
   }
 
+  function initLogoutButton() {
+    const btn = document.querySelector('[aria-label="로그아웃"]');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      handleAccountAction('logout');
+    });
+  }
+
   function initSupportButton() {
     const btn = document.querySelector('[aria-label="고객 지원"]');
     if (!btn) return;
@@ -1234,6 +1361,9 @@ window.addEventListener('load', () => {
   });
 
   // ─── 초기화 ─────────────────────────────────────────
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
   initNavTooltips();
   initNavIconToggle();
   initAccountDropdown();
@@ -1242,6 +1372,7 @@ window.addEventListener('load', () => {
   initMessagePanel();
   initSettingsPanel();
   initSupportButton();
+  initLogoutButton();
   resetAllNavIcons();
 
   // WebSocket 연결 및 안읽은 메시지 뱃지
