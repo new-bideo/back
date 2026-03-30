@@ -16,6 +16,8 @@ public interface MemberMapper {
 
     Optional<MemberVO> selectByEmail(String email);
 
+    Optional<MemberVO> selectByNickname(String nickname); // 이승민| 프로필 닉네임 경로 조회로 인한 추가
+
     Optional<MemberVO> selectByPhoneNumber(String phoneNumber);
 
     boolean existsByNickname(String nickname);

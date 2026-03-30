@@ -122,6 +122,12 @@ public class WorkService {
     @Transactional(readOnly = true)
     public List<WorkListResponseDTO> getProfileWorks(Long galleryId) {
         Long memberId = resolveMemberId(null);
+        return getProfileWorks(memberId, galleryId);
+    }
+
+    // 특정 회원의 프로필 화면에 표시할 작품 목록을 조회한다.
+    @Transactional(readOnly = true)
+    public List<WorkListResponseDTO> getProfileWorks(Long memberId, Long galleryId) { // 이승민| 프로필 닉네임 경로 적용으로 인한 추가
         WorkSearchDTO searchDTO = new WorkSearchDTO();
         searchDTO.setMemberId(memberId);
         searchDTO.setGalleryId(galleryId);
