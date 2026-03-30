@@ -51,9 +51,15 @@ public class GalleryService {
     // 프로필 하이라이트용 예술관 목록 조회
     @Transactional(readOnly = true)
     public List<GalleryListResponseDTO> getProfileGalleries() {
-        List<GalleryListResponseDTO> galleries = galleryDAO.findAllByMemberId(resolveMemberId(null));
-        Long memberId = resolveAuthenticatedMemberId();
-        galleries.forEach(gallery -> gallery.setIsLiked(memberId != null && galleryDAO.existsLike(memberId, gallery.getId())));
+        return getProfileGalleries(resolveMemberId(null));
+    }
+
+    // 특정 회원의 프로필 하이라이트용 예술관 목록 조회
+    @Transactional(readOnly = true)
+    public List<GalleryListResponseDTO> getProfileGalleries(Long memberId) { // 이승민| 프로필 닉네임 경로 적용으로 인한 추가
+        List<GalleryListResponseDTO> galleries = galleryDAO.findAllByMemberId(memberId);
+        Long currentMemberId = resolveAuthenticatedMemberId();
+        galleries.forEach(gallery -> gallery.setIsLiked(currentMemberId != null && galleryDAO.existsLike(currentMemberId, gallery.getId())));
         return galleries;
     }
 

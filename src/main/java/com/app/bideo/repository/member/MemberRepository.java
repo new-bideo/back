@@ -26,6 +26,10 @@ public class MemberRepository {
         return memberMapper.selectByEmail(email);
     }
 
+    public Optional<MemberVO> findByNickname(String nickname) { // 이승민| 프로필 닉네임 경로 조회로 인한 추가
+        return memberMapper.selectByNickname(nickname);
+    }
+
     public Optional<MemberVO> findByPhoneNumber(String phoneNumber) {
         return memberMapper.selectByPhoneNumber(phoneNumber);
     }
