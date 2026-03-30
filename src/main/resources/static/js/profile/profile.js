@@ -20,6 +20,7 @@ let isWorkLikeRequestPending = false;
 let isGalleryLikeRequestPending = false;
 let auctionRegisterDeadlineHours = 0;
 let isAuctionRegisterSubmitting = false;
+let isWorkSaved = false;
 const workEditGallerySelect = document.getElementById('workEditGallerySelect');
 const workEditGallerySelectWrap = document.getElementById('workEditGallerySelectWrap');
 const workEditGallerySelectTrigger = document.getElementById('workEditGallerySelectTrigger');
@@ -619,6 +620,7 @@ async function renderWorkDetailModal(work) {
   const auctionButton = document.getElementById('workDetailAuctionButton');
   const auctionWrap = document.getElementById('workDetailAuctionWrap');
   const auctionLabel = document.getElementById('workDetailAuctionLabel');
+  const savedButton = document.getElementById('workDetailSavedButton');
   const isOwnWork = currentMemberId !== null && work.memberId === currentMemberId;
   const shouldHideTrade = IS_OWNER || isOwnWork;
   const isViewerWork = !IS_OWNER && !isOwnWork;
@@ -657,6 +659,11 @@ async function renderWorkDetailModal(work) {
         ? '경매 종료'
       : (isViewerWork ? '경매요청하기' : '경매하기');
   }
+  if (savedButton) {
+    savedButton.classList.remove('is-saved');
+    savedButton.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>';
+  }
+  isWorkSaved = false;
 
   syncLikeButtonIcon(document.getElementById('workDetailLikeButton'), Boolean(work.isLiked), 24);
 
@@ -2176,6 +2183,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     requestWorkAuction();
+  });
+
+  document.getElementById('workDetailSavedButton')?.addEventListener('click', () => {
+    const savedButton = document.getElementById('workDetailSavedButton');
+    if (!savedButton) return;
+
+    isWorkSaved = !isWorkSaved;
+    savedButton.classList.toggle('is-saved', isWorkSaved);
   });
 
   auctionRegisterPriceInput?.addEventListener('input', (event) => {

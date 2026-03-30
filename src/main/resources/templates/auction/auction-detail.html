@@ -133,11 +133,11 @@
                 </div>
                 <!-- 좋아요 / 공유 -->
                 <div class="work-actions">
-                    <button class="action-btn" id="likeBtn" onclick="toggleLike(this)">
+                    <button class="action-btn action-btn--disabled" id="likeBtn" type="button" disabled aria-disabled="true">
                         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                         <span id="likeCount">0</span>
                     </button>
-                    <button class="action-btn">
+                    <button class="action-btn" id="shareBtn" type="button">
                         <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                         공유
                     </button>
@@ -300,6 +300,33 @@
     </div>
 
 </div>
+</div>
+
+<div class="modal-overlay work-share-modal-overlay" id="workShareModal" hidden>
+    <div class="work-share-modal" role="dialog" aria-modal="true" aria-label="공유">
+        <div class="work-share-modal__header">
+            <div class="work-share-modal__spacer"></div>
+            <h2 class="work-share-modal__title">공유</h2>
+            <button class="work-share-modal__close" id="auctionShareCloseButton" type="button" aria-label="닫기">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <polyline fill="none" points="20.643 3.357 12 12 3.353 20.647" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></polyline>
+                    <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" x1="20.649" x2="3.354" y1="20.649" y2="3.354"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="work-share-modal__receiver">
+            <label class="work-share-modal__label" for="workShareSearchInput">받는 사람:</label>
+            <div class="work-share-modal__receiver-body">
+                <div class="work-share-modal__chips" id="workShareSelectedList"></div>
+                <input class="work-share-modal__search" id="workShareSearchInput" type="text" placeholder="검색..." autocomplete="off">
+            </div>
+        </div>
+        <div class="work-share-modal__list" id="workShareRecipientList"></div>
+        <div class="work-share-modal__footer">
+            <input class="work-share-modal__message" id="workShareMessageInput" type="text" placeholder="메시지 쓰기..." autocomplete="off">
+            <button class="work-share-modal__send" id="workShareSendButton" type="button">보내기</button>
+        </div>
+    </div>
 </div>
 
 <script src="/js/auction/auction-detail.js"></script>

@@ -67,7 +67,7 @@
           <div class="video-gallery-button"
                role="button"
                tabindex="0"
-               th:onclick="|window.location.href='${profilePath}?galleryId=${gallery.id}'|"> <!-- 예술관 선택 후에도 /profile/{nickname} 유지 -->
+               th:onclick="window.location.href = [[@{/profile/{nickname}(nickname=${profileNickname},galleryId=${gallery.id})}]]"> <!-- 예술관 선택 후에도 /profile/{nickname} 유지 -->
             <div class="canvas-parent">
               <canvas class="ring-canvas"
                       width="87"
@@ -137,7 +137,7 @@
   <div class="post-grid">
     <div class="post-item"
          th:each="work : ${works}"
-         th:onclick="|openWorkDetailModal(${work.id})|"
+         th:onclick="openWorkDetailModal([[${work.id}]])"
          style="cursor:pointer;">
         <video th:if="${work.thumbnailUrl != null and !#strings.isEmpty(work.thumbnailUrl) and work.category == 'VIDEO'}"
                th:src="${work.thumbnailUrl}"
@@ -250,6 +250,14 @@
                 </svg>
               </button>
               <span class="work-detail-like-count" id="workDetailAuctionLabel">경매하기</span>
+            </div>
+            <div class="work-detail-like-stack owner-only" id="workDetailSavedWrap">
+              <button class="work-detail-icon-btn" id="workDetailSavedButton" type="button" title="찜하기" aria-label="찜하기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </button>
+              <span class="work-detail-like-count">찜하기</span>
             </div>
           </div>
           <div class="work-detail-price" id="workDetailPrice"></div>

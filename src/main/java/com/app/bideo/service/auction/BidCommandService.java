@@ -53,10 +53,12 @@ public class BidCommandService {
                 .isWinning(true)
                 .build());
 
+        int uniqueBidderCount = bidDAO.findBidderIds(requestDTO.getAuctionId()).size();
+
         auctionDAO.updateCurrentPrice(
                 requestDTO.getAuctionId(),
                 requestDTO.getBidPrice(),
-                auction.getBidCount() + 1
+                uniqueBidderCount
         );
 
         notificationService.createNotification(
